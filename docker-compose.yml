@@ -61,6 +61,26 @@ services:
     environment:
       - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
 
+  doc-monitor:
+    build:
+      context: ./monitor
+      #args:
+        #- MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+        #- SLACK_BOT_TOKEN=${SLACK_BOT_TOKEN}
+        #- TZ=Asia/Tokyo
+    image: doc-monitor-image
+    container_name: doc_monitor
+    hostname: monitor-server
+    networks:
+      container-link:
+    depends_on:
+      doc-mysql:
+        condition: service_healthy
+    environment:
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+      - SLACK_BOT_TOKEN=${SLACK_BOT_TOKEN}
+      - TZ=Asia/Tokyo
+
 
 networks:
   container-link:
