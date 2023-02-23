@@ -1,0 +1,25 @@
+FROM python:3.9
+
+#ARG MYSQL_ROOT_PASSWORD
+#ARG SLACK_BOT_TOKEN
+#ARG TZ
+
+RUN apt-get update && apt-get install -y --no-install-recommends
+RUN pip install --upgrade pip
+
+# Install necessary libraries
+RUN pip install mysql-connector-python
+RUN pip install slack_sdk
+
+# Copy the code to the container
+COPY monitor.py /app/monitor.py
+
+# Set working directory
+WORKDIR /app
+
+#ENV MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+#ENV SLACK_BOT_TOKEN=${SLACK_BOT_TOKEN}
+#ENV TZ=${TZ}
+
+# Run the Python script
+ENTRYPOINT ["python", "monitor.py"]
