@@ -1,0 +1,67 @@
+version: '3'
+services:
+
+  doc-mysql:
+    build:
+      context: ./mysql
+      args:
+        - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+    image: doc-mysql-image
+    container_name: doc_mysql
+    hostname: mysql-server
+    restart: always
+    networks:
+      container-link:
+        aliases:
+          - DB
+    ports:
+      - "13306:3306"
+    volumes:
+      - ./mysql/db_data:/var/lib/mysql
+    healthcheck:
+      test: exit 0
+      interval: 3s
+      timeout: 5s
+      retries: 3
+      start_period: 5s
+    environment:
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+
+  doc-commander:
+    build:
+      context: ./commander
+    image: doc-commander-image
+    container_name: doc_commander
+    hostname: command-server
+    #restart: always
+    networks:
+      container-link:
+        aliases:
+          - AP
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    depends_on:
+      doc-mysql:
+        condition: service_healthy
+    entrypoint:
+      - python
+      - commander.py
+    environment:
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+
+  ssl-scanner:
+    build:
+      context: ./scanner
+      args:
+        - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+        - TZ=Asia/Tokyo
+    image: ssl-scanner-image
+    container_name: doc_scanner-sample
+    hostname: scan-server
+    environment:
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+
+
+networks:
+  container-link:
+    name: mysql_NW
