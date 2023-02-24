@@ -22,4 +22,5 @@ WORKDIR /app
 #ENV TZ=${TZ}
 
 # Run the Python script
-ENTRYPOINT ["python", "monitor.py"]
+#ENTRYPOINT ["python", "monitor.py"]
+#ENTRYPOINT ["/bin/bash"]

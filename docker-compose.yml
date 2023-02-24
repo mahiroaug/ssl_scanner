@@ -33,7 +33,6 @@ services:
     image: doc-commander-image
     container_name: doc_commander
     hostname: command-server
-    #restart: always
     networks:
       container-link:
         aliases:
@@ -60,6 +59,8 @@ services:
     hostname: scan-server
     environment:
       - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+    #profiles:
+    #  - extra
 
   doc-monitor:
     build:
@@ -79,7 +80,10 @@ services:
     environment:
       - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
       - SLACK_BOT_TOKEN=${SLACK_BOT_TOKEN}
+      - SLACK_CHANNEL_ID=${SLACK_CHANNEL_ID}
       - TZ=Asia/Tokyo
+    #profiles:
+    #  - extra
 
 
 networks:
