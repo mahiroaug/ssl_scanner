@@ -1,10 +1,12 @@
 USE Certificates;
 
 INSERT INTO Certificates (Domain) VALUES
-('eonet.jp'),
-('support.eonet.jp'),
-('mineo.jp'),
-('optage.co.jp'),
-('api.mineo.jp'),
-('lalacall.jp'),
-('support.lalacall.jp');
+('github.com'),
+('slack.com');
+
+
+LOAD DATA INFILE '/var/lib/mysql-files/FQDN.csv'
+INTO TABLE Certificates
+FIELDS TERMINATED BY ','
+LINES TERMINATED BY '\n'
+(Domain);

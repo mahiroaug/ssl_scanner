@@ -1,2 +1,5 @@
-.env
+mysql/env_mysql.env
 mysql/db_data
+mysql/FQDN.csv
+monitor/env_monitor.env
+scanner/env_scanner.env
