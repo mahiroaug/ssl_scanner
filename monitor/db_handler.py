@@ -24,7 +24,7 @@ def db_handler(sql,param,commit_flag=False):
             cursor.execute(sql,param)
         
         result = cursor.fetchall()
-        #print(result)
+        ##print(result)
         
         if commit_flag:
             cnx.commit()

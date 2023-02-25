@@ -9,6 +9,7 @@ RUN pip install slack_sdk
 
 # Copy the code to the container
 COPY monitor.py /app/monitor.py
+COPY db_handler.py /app/db_handler.py
 
 # Set working directory
 WORKDIR /app

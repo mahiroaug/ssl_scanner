@@ -1,4 +1,5 @@
 import sys
+import time
 from db_handler import db_handler
 from ssl_certificate_checker import scan
 
@@ -8,11 +9,16 @@ def get_record_count():
     FROM Certificates
     ''')
 
-    count = db_handler(sql,None,False)
-    
-    if count < 0:
-        raise ValueError("The result must be a non-negative integer.")
-    
+    count_result = db_handler(sql,None,False)[0]
+    if isinstance(count_result, tuple):
+        #print("tuple")
+        count = int(count_result[0])
+    elif len(count_result) == 0:
+        raise ValueError("No record count returned from database")
+    else:
+        count = int(count_result)
+        
+    print("type=",type(count)," value=",count)
     return(count)
 
 
@@ -36,19 +42,25 @@ def get_list(n,id):
     count = get_record_count()
     
     # Divide count into n equal parts
-    chunk_size = (count - 1) // n
-    remainder = (count - 1) % n
+    S = (count) // n
+    m = (count) % n
 
-    for id in range(1, n + 1):
-        # Calculate the range for the given ID
-        if id <= remainder:
-            start = chunk_size * id + id
-            end = start + chunk_size + 1
-        else:
-            start = chunk_size * id + remainder + 1
-            end = start + chunk_size
-            
+    if id <= m:
+        start = (id - 1) * (S + 1) + 1
+        end = id * (S + 1)
+
+        if id == 1:
+            start = 1
+
+    else:
+        start = (id - 1) * S + 1 + m
+        end = id * S + m
+        
+    print("start=",start,",end=",end)   
+     
     chunk = get_record_chunk(start,end)
+    print("chunk=")
+    print(chunk)
     return(chunk)
 
 
@@ -59,18 +71,23 @@ def update(domain,subject,issuer,sig_algo,start_date,expiry_date,checkdate):
     WHERE Domain = %s;
     ''')
     param = (subject,issuer,sig_algo,start_date,expiry_date,checkdate,domain)
+    
+    print(param)
     result = db_handler(sql, param, True)
 
     return(result)
 
 
 def main(workers,worker_id):
-    list = get_list(workers,worker_id)
+    list = get_list(int(workers),int(worker_id))
     
     for row in list:
         domain = row[0]
         scan_result = scan(domain)
-        update(domain,*scan_result)
+        
+        if scan_result:
+            update(domain,*scan_result)
+        time.sleep(1)
 
 
 if __name__=="__main__":
