@@ -87,16 +87,27 @@ def main(workers,worker_id):
         
         if scan_result:
             update(domain,*scan_result)
-        time.sleep(1)
+        time.sleep(3)
 
 
 if __name__=="__main__":
     # Check Argument
     if len(sys.argv) != 3:
         print("not match argument")
-        sys.exit()
+        sys.exit(1)
+    try:
+        a1 = int(sys.argv[1])
+        a2 = int(sys.argv[2])
+        if a1 <= 0 or a2 <= 0:
+            raise ValueError("negative values")
+    except ValueError as e:
+        print(f"argument error: {e}")
+        sys.exit(1) 
+    except IndexError:
+        print("argument error") 
+        sys.exit(1)
 
-    workers = sys.argv[1]
-    worker_id = sys.argv[2]
-    
+    workers = a1
+    worker_id = a2
     main(workers,worker_id)
+    
