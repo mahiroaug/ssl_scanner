@@ -1,3 +1,6 @@
+#### obsolete
+
+
 import mysql.connector
 import sys
 import os

@@ -1,9 +1,6 @@
 # Base image
 FROM python:3.9
 
-ARG MYSQL_ROOT_PASSWORD
-ARG TZ
-
 RUN apt-get update && apt-get install -y --no-install-recommends
 RUN pip install --upgrade pip
 
@@ -14,13 +11,13 @@ RUN pip install mysql-connector-python
 
 # Copy the code to the container
 COPY ssl_certificate_checker.py /app/ssl_certificate_checker.py
-COPY update.py /app/update.py
+### obsolete
+#COPY update.py /app/update.py
+COPY controler.py /app/controler.py
+COPY db_handler.py /app/db_handler.py
 
 # Set working directory
 WORKDIR /app
 
-ENV MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
-ENV TZ=${TZ}
-
 # Run the Python script
-ENTRYPOINT ["python", "update.py"]
+ENTRYPOINT ["python", "controler.py"]
