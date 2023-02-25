@@ -4,11 +4,9 @@ INSERT INTO Certificates (Domain) VALUES
 ('github.com'),
 ('slack.com');
 
-BULK INSERT Certificates (Domain)
-FROM 'FQDN.csv'
-WITH (
-    FORMAT = 'CSV',
-    FIELDTERMINATOR = ',',
-    ROWTERMINATOR = '\n',
-    FIRSTROW = 1
-);
+
+LOAD DATA INFILE '/var/lib/mysql-files/FQDN.csv'
+INTO TABLE Certificates
+FIELDS TERMINATED BY ','
+LINES TERMINATED BY '\n'
+(Domain);

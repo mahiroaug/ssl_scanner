@@ -8,7 +8,7 @@ services:
     container_name: doc_mysql
     hostname: DB-server
     env_file:
-      - env_mysql.env
+      - ./mysql/env_mysql.env
     networks:
       container-link:
         aliases:
@@ -53,7 +53,7 @@ services:
     container_name: doc_scanner
     hostname: scan-server
     env_file:
-      - env_scanner.env
+      - ./scanner/env_scanner.env
     networks:
       container-link:
         aliases:
@@ -71,7 +71,7 @@ services:
     container_name: doc_monitor
     hostname: monitor-server
     env_file:
-      - env_monitor.env
+      - ./monitor/env_monitor.env
     networks:
       container-link:
         aliases:

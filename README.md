@@ -17,17 +17,17 @@ Analyzing SSL certificates for a website.
 `docker compose config`
 
 ### build
-`docker compose build`
+`docker compose --profile extra build --no-cache`
 
 ### run
 `docker compose up -d`
 
-###  (in case of modified)
-`docker compose up --build -d`
 
 ### post message in slack
 `docker compose run doc-monitor python monitor.py`
 
 ### stop
 `docker compose down --rmi all --volumes --remove-orphans`
+
+, and delete your db_data directory.
 
