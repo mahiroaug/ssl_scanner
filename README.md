@@ -45,7 +45,7 @@ Analyzing SSL certificates for a website.
 ### run (scanner by cli or cronjob)
 `docker compose run doc-scanner controler.py <nodes> <node_id>`
 
-- `nodes` is a number of parallels.
+- `nodes` is a line of parallels.
 - `node_id` is each node.
 
 example:
@@ -54,9 +54,9 @@ example:
 - `docker compose run doc-scanner controler.py 4 3`
 - `docker compose run doc-scanner controler.py 4 4`
 
-or
+in parallel:
 
-`seq 1 4 | parallel docker compose run doc-scanner controler.py 4 {}`
+- `seq 1 4 | parallel docker compose run doc-scanner controler.py 4 {}`
 
 ### post message in slack
 `docker compose run doc-monitor python monitor.py`
