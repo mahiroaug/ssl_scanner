@@ -6,7 +6,18 @@ from cryptography import x509
 ### from cryptography.hazmat.backends import default_backend
 
 def scan(url):
-    cert_data = ssl.get_server_certificate((url,443),ssl_version=ssl.PROTOCOL_SSLv23)
+    try:
+        cert_data = ssl.get_server_certificate((url,443),ssl_version=ssl.PROTOCOL_SSLv23)
+    except ssl.SSLError as e:
+        print(f'Failed to resolve hostname [{url}]: {e}')
+        return(None)
+    except Exception as e:
+        print(f"Error Occurred [{url}]: {e}")
+        return(None)
+    except:
+        print(f"Exception [{url}]")
+        return(None)
+    
 
     # Convert to human-readable form
     x509 = OpenSSL.crypto.load_certificate(OpenSSL.crypto.FILETYPE_PEM, cert_data)
@@ -43,6 +54,8 @@ def scan(url):
     print('Checkdate:', checkdate)
 
     return(subject,issuer,sig_algo,start_date,expiry_date,checkdate)
+
+
 
 
 if __name__=="__main__":

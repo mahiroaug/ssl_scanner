@@ -10,3 +10,5 @@ INTO TABLE Certificates
 FIELDS TERMINATED BY ','
 LINES TERMINATED BY '\n'
 (Domain);
+
+UPDATE Certificates SET Domain = REPLACE(Domain, '\r', '');

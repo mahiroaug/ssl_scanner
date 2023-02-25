@@ -20,4 +20,5 @@ COPY db_handler.py /app/db_handler.py
 WORKDIR /app
 
 # Run the Python script
-ENTRYPOINT ["python", "controler.py"]
+#ENTRYPOINT ["python", "controler.py", "3", "1"]
+ENTRYPOINT ["python"]
