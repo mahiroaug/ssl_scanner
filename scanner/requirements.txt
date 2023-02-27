@@ -1,0 +1,4 @@
+requests
+cryptography
+pyopenssl
+mysql-connector-python
