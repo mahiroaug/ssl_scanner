@@ -18,7 +18,6 @@ def get_record_chunk(start,end):
         # https://dataset.readthedocs.io/en/latest/queries.html#advanced-filters
         entries = certificates.find(ID={'between': (start, end)})
         domains = [entry['Domain'] for entry in entries]
-    print(domains)
     return domains
 
 
@@ -40,9 +39,9 @@ def get_list(n,id):
     else:
         start = (id - 1) * S + 1 + m
         end = id * S + m
-        
+
     print("start=",start,",end=",end)   
-     
+
     chunk = get_record_chunk(start,end)
     print("chunk=")
     print(chunk)
@@ -97,4 +96,3 @@ if __name__=="__main__":
     workers = a1
     worker_id = a2
     main(workers,worker_id)
-    

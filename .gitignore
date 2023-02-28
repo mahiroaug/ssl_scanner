@@ -3,6 +3,9 @@ mysql/db_data
 mysql/FQDN.csv
 monitor/env_monitor.env
 scanner/env_scanner.env
+*.sqlite
+*.sqlite-shm
+*.sqlite-wal
 
 # ------------
 # Created by https://www.toptal.com/developers/gitignore/api/vim,visualstudiocode,python,macos,windows
