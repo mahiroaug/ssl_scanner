@@ -1,0 +1,7 @@
+requests
+cryptography
+pyopenssl
+dataset
+pysqlite3
+mysqlclient
+psycopg2

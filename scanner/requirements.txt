@@ -1,0 +1,7 @@
+requests
+cryptography
+pyopenssl
+mysql-connector-python
+dataset
+pysqlite3
+mysqlclient

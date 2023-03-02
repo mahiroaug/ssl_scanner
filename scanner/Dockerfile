@@ -5,9 +5,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends
 RUN pip install --upgrade pip
 
 # Install necessary libraries
-RUN pip install requests cryptography
-RUN pip install pyopenssl
-RUN pip install mysql-connector-python
+COPY requirements.txt /app/requirements.txt
+RUN pip install -r /app/requirements.txt
 
 # Copy the code to the container
 COPY ssl_certificate_checker.py /app/ssl_certificate_checker.py
