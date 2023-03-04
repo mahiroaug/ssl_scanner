@@ -9,11 +9,12 @@ COPY requirements.txt /app/requirements.txt
 RUN pip install -r /app/requirements.txt
 
 # Copy the code to the container
-COPY ssl_certificate_checker.py /app/ssl_certificate_checker.py
-### obsolete
-#COPY update.py /app/update.py
-COPY controler.py /app/controler.py
-COPY db_handler.py /app/db_handler.py
+COPY \
+  ssl_certificate_checker.py \
+  controler.py \
+  db_handler.py \
+  db.py \
+  /app/
 
 # Set working directory
 WORKDIR /app
