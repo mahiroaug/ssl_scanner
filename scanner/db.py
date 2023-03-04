@@ -2,7 +2,7 @@ import os
 import dataset
 
 
-__all__ = ['db', 'format_table', 'populate_table']
+__all__ = ['db', 'create_certificates_table', 'populate_certificates_table']
 
 
 def _load_connection_string():
