@@ -7,3 +7,4 @@ pysqlite3
 mysqlclient
 click
 validators
+pytest
