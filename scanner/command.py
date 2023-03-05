@@ -4,6 +4,7 @@ import dataset
 import typing
 import click
 import re
+import io
 from datetime import date, datetime
 import ssl_certificate_checker
 import controler
@@ -141,6 +142,65 @@ def scan(domain: str):
     output_multiple_data([row])
 
 
+@cli.command()
+@click.option("-a", "--allocate", type=str, required=True,
+              help="Task allocate group, formed like '1/2'. "
+                   "This means 'Theres 2 workers and this is the 1st worker process'. ")
+@handle_exception
+def bulkscan(allocate: str):
+    """ Scan a part of all domains and update information, in the database.
+    You must specify '--allocate 1/3' option, to tell the process about an allocated domains.
+    If you will start 3 bulkscan processes, the first process's option is '--allocate 1/3' and the second is '--allocate 2/3'.
+    """
+    (worker_id, workers) = parse_allocate_argument(allocate)
+    controler.main(workers=workers, worker_id=worker_id)
+
+
+@cli.command()
+@click.argument('input', type=click.File('r'))
+@click.option("-d", "--delete", is_flag=True, default=False,
+              help="If true, domains that are not listed in the file will be deleted from the database.")
+@click.option("-y", "--yes", is_flag=True, default=False,
+              help="If true, Skip prompts.")
+@handle_exception
+def load(input: io.TextIOWrapper, delete: bool, yes: bool):
+    """ Sync database records with the domain list file.
+
+    Args:
+        input (io.TextIOWrapper): Simple domain list file.
+        delete (bool): If true, domains that are not listed in the file will be deleted from the database.
+        yes (bool): If true, Skip prompts.
+    """
+    # Input domain list.
+    listed_domains = set(load_domains_list(input))
+    # Current domain list.
+    table = get_table()
+    exists_domains = set([r['Domain'] for r in table.all()])
+
+    # Check Changes
+    add_change = listed_domains - exists_domains
+    del_change = exists_domains - listed_domains
+    
+    if len(add_change) == 0 and len(del_change) == 0:
+        output_message("There is nothing to be updated.")
+        return 0
+
+    if len(add_change) > 0:
+        output_message("[Domains to be ADDED]:")
+        output_message(" " + ", ".join(add_change))
+    if delete and len(del_change) > 0:
+        output_error("[Domains to be DELETED]")
+        output_error(" " + ", ".join(del_change))
+    if not yes:
+        click.confirm('Do you want to continue?', abort=True)
+
+    table.insert_many([{"Domain": domain} for domain in add_change])
+    output_message(f"{len(add_change)} domains inserted.")
+    if delete and len(del_change) > 0:
+        print([q for q in table.find(Domain=del_change)])
+        table.delete(Domain=del_change)
+        output_error(f"{len(del_change)} domains deleted.")
+
 
 # Functions
 
@@ -274,6 +334,21 @@ def output_multiple_data(rows: list[dict], format="line"):
         output_data(json.dumps(data, default=serialize_field))
     else:
         raise CommandException.ProgramError('unknown-format')
+
+
+# File IO
+def load_domains_list(file: io.TextIOWrapper) -> list[str]:
+    listed_domains = []
+    for line in file.readlines():
+        m = re.search(r'^\s*([^ ]+?)(\s*#.*)?$', line)
+        if m is None:
+            continue
+        value = m.group(1)
+        if len(value) == 0:
+            continue
+        assert_domain_format(value)
+        listed_domains.append(value)
+    return listed_domains
 
 
 if __name__ == '__main__':
