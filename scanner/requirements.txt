@@ -5,3 +5,6 @@ mysql-connector-python
 dataset
 pysqlite3
 mysqlclient
+click
+validators
+pytest

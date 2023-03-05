@@ -12,9 +12,14 @@ RUN pip install -r /app/requirements.txt
 COPY \
   ssl_certificate_checker.py \
   controler.py \
-  db_handler.py \
   db.py \
+  command.py \
+  command_util.py \
+  __main__.py \
   /app/
+
+# Add test codes
+COPY ./tests /app/tests
 
 # Set working directory
 WORKDIR /app
