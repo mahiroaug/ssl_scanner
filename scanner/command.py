@@ -5,6 +5,8 @@ import typing
 import click
 import re
 from datetime import date, datetime
+import ssl_certificate_checker
+import controler
 from command_util import \
     CommandException, \
     output_data, \
@@ -115,6 +117,28 @@ def delete(domain: str):
         return 1
     table.delete(Domain=domain)
     output_message(f"Domain {domain} deleted.")
+
+
+@cli.command()
+@click.argument("domain")
+@handle_exception
+def scan(domain: str):
+    """ Scan domains over HTTPS, and update informations in the database
+
+    Args:
+        domain (str): A domain to scan
+    """
+    assert_domain_format(domain)
+    table = get_table()
+    row = table.find_one(Domain=domain)
+    if row is None:
+        output_error(f"Domain {domain} not registered.")
+        return 1
+    scan_result = ssl_certificate_checker.scan(domain)
+    if scan_result:
+        controler.update(domain, *scan_result)
+    row = table.find_one(Domain=domain)
+    output_multiple_data([row])
 
 
 
