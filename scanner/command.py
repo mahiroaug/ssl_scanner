@@ -80,6 +80,43 @@ def show(domain: str, output: str):
         output_single_data(row, format=output)
 
 
+@click.argument("domain")
+@handle_exception
+def add(domain: str):
+    """ Register a new domain into the database.
+
+    Args:
+        domain (str): A domain name to register
+    """
+    assert_domain_format(domain)
+    table = get_table()
+    row = table.find_one(Domain=domain)
+    if row is not None:
+        output_error(f"Domain {domain} is already registered.")
+        return 1
+    table.insert({"Domain": domain})
+    output_message(f"Domain {domain} inserted.")
+
+
+@cli.command()
+@click.argument("domain")
+@handle_exception
+def delete(domain: str):
+    """ Delete one domain record from the database
+
+    Args:
+        domain (str): A domain name to delete
+    """
+    assert_domain_format(domain)
+    table = get_table()
+    row = table.find_one(Domain=domain)
+    if row is None:
+        output_error(f"Domain {domain} not registered.")
+        return 1
+    table.delete(Domain=domain)
+    output_message(f"Domain {domain} deleted.")
+
+
 
 # Functions
 
