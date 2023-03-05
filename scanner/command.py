@@ -21,5 +21,19 @@ def info():
     output_message(url.render_as_string(hide_password=True))
 
 
+@cli.command()
+@click.option("--drop", is_flag=True, default=False)
+@handle_exception
+def init(drop: bool):
+    """ Create a table in the database
+
+    Args:
+        drop (bool): Drop existing table and re-create
+    """
+    from db import create_certificates_table
+    create_certificates_table(drop)
+    output_message("Init table: OK")
+
+
 if __name__ == '__main__':
     cli()
