@@ -83,6 +83,7 @@ def show(domain: str, output: str):
         output_single_data(row, format=output)
 
 
+@cli.command()
 @click.argument("domain")
 @handle_exception
 def add(domain: str):
