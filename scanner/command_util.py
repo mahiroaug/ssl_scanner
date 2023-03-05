@@ -58,3 +58,8 @@ class CommandException(Exception):
     @classmethod
     def InvalidArgumentError(cls, msg: str) -> 'CommandException':
         return cls(3, f"[FATAL] Invalid argument. {msg}")
+
+    @classmethod
+    def InvalidDomainArgument(cls) -> 'CommandException':
+        return cls.InvalidArgumentError("domain is malformed.")
+

@@ -41,6 +41,45 @@ def init(drop: bool):
     output_message("Init table: OK")
 
 
+@cli.command('list')
+@click.option('-o', '--output', type=click.Choice(['line', 'json']), default='line')
+@click.option('-s', '--sort', type=click.Choice(['id', 'expire', 'scan']), default='id')
+@handle_exception
+def list_(output, sort):
+    """ List domain records in the database
+    """
+    table = get_table()
+    order_by_keys = {'id': ['ID'],
+                     'expire': ['Valid_To'],
+                     'scan': ['Last_Check'],
+                     }
+    rows = [row for row in table.find(order_by=order_by_keys[sort])]
+    if len(rows) > 0:
+        output_multiple_data(rows, format=output)
+    else:
+        output_error('No records found.')
+
+
+@cli.command()
+@click.argument("domain")
+@click.option('-o', '--output', type=click.Choice(['line', 'json']), default='line')
+@handle_exception
+def show(domain: str, output: str):
+    """ Show one domain record in the database
+
+    Args:
+        domain (str): A domain name to show
+    """
+    assert_domain_format(domain)
+    table = get_table()
+    row = table.find_one(Domain=domain)
+    if row is None:
+        output_error(f"Domain {domain} not registered.")
+        return 1
+    else:
+        output_single_data(row, format=output)
+
+
 
 # Functions
 
@@ -50,6 +89,13 @@ def get_table() -> dataset.Table:
     if not db.has_table('Certificates'):
         raise CommandException.TableNotFound()
     return db.get_table("Certificates")
+
+
+def assert_domain_format(domain: str):
+    """ Domain format assertion """
+    result = validators.domain(domain)  # type: ignore
+    if isinstance(result, validators.utils.ValidationFailure):
+        raise CommandException.InvalidDomainArgument()
 
 
 def convert_to_output(row: dict, now: date) -> dict:
