@@ -281,7 +281,7 @@ def serialize_field(obj) -> typing.Union[list, dict, str, int, None]:
     raise TypeError(f"Object of type {type(obj)} is not serializable")
 
 
-def lines_dumps(rows: list[dict] | dict) -> str:
+def lines_dumps(rows: typing.Union[list[dict], dict]) -> str:
     """ Convert data to str in line format.
 
     Args:
