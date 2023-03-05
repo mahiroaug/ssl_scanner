@@ -63,3 +63,6 @@ class CommandException(Exception):
     def InvalidDomainArgument(cls) -> 'CommandException':
         return cls.InvalidArgumentError("domain is malformed.")
 
+    @classmethod
+    def InvalidAllocateArgument(cls) -> 'CommandException':
+        return cls.InvalidArgumentError("'allocate' must be formed as 'WORKER_ID/WORKERS' like '1/2', and the values must in range of 0 < WORKERS <= WORKERS.")

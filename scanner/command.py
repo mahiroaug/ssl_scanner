@@ -159,6 +159,17 @@ def assert_domain_format(domain: str):
         raise CommandException.InvalidDomainArgument()
 
 
+def parse_allocate_argument(allocate_argument: str) -> typing.Tuple[int, int]:
+    match = re.match(r'^([1-9][0-9]*)/([1-9][0-9]*)$', allocate_argument)
+    if not match:
+        raise CommandException.InvalidAllocateArgument()
+    worker = int(match.group(1))
+    tasks = int(match.group(2))
+    if worker > tasks:
+        raise CommandException.InvalidAllocateArgument()
+    return (worker, tasks)
+
+
 def convert_to_output(row: dict, now: date) -> dict:
     """ Organize data fields for output.
 
