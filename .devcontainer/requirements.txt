@@ -5,3 +5,5 @@ dataset
 pysqlite3
 mysqlclient
 psycopg2
+click
+validators

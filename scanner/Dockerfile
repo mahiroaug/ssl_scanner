@@ -14,7 +14,12 @@ COPY \
   controler.py \
   db_handler.py \
   db.py \
+  command.py \
+  __main__.py \
   /app/
+
+# Add test codes
+COPY tests tests
 
 # Set working directory
 WORKDIR /app
