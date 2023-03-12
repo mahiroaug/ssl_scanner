@@ -67,8 +67,8 @@ def create_certificates_table(drop_exists=False) -> dataset.Table:
     """
     if db.has_table("Certificates") and drop_exists:
         db.get_table("Certificates").drop()
-    table: dataset.Table = db.create_table("Certificates", primary_id="ID", primary_increment="ID")
-    table.create_column("Domain", type=db.types.text, unique=True)
+    table: dataset.Table = db.create_table("Certificates", primary_id="ID")
+    table.create_column("Domain", type=db.types.string(256), unique=True)
     table.create_column("Subject", type=db.types.text)
     table.create_column("Issuer", type=db.types.text)
     table.create_column("SigAlgorithm", type=db.types.text)
