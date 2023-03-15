@@ -8,3 +8,5 @@ psycopg2
 click
 validators
 pytest
+slack_sdk
+slack_sdk.errors

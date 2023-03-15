@@ -1,51 +1,4 @@
-
 services:
-
-  doc-mysql:
-    build:
-      context: ./mysql
-    image: doc-mysql-image
-    container_name: doc_mysql
-    hostname: DB-server
-    env_file:
-      - ./mysql/env_mysql.env
-    networks:
-      container-link:
-        aliases:
-          - DB
-    ports:
-      - "13306:3306"
-    volumes:
-      - ./mysql/db_data:/var/lib/mysql
-    healthcheck:
-      test: exit 0
-      interval: 3s
-      timeout: 5s
-      retries: 3
-      start_period: 5s
-    restart: always
-
-  ##### obsolete #####
-  #doc-commander:
-  #  build:
-  #    context: ./commander
-  #  image: doc-commander-image
-  #  container_name: doc_commander
-  #  hostname: command-server
-  #  networks:
-  #    container-link:
-  #      aliases:
-  #        - AP
-  #  volumes:
-  #    - /var/run/docker.sock:/var/run/docker.sock
-  #  depends_on:
-  #    doc-mysql:
-  #      condition: service_healthy
-  #  entrypoint:
-  #    - python
-  #    - commander.py
-
-
   doc-scanner:
     build:
       context: ./scanner
@@ -53,36 +6,4 @@ services:
     container_name: doc_scanner
     hostname: scan-server
     env_file:
-      - ./scanner/env_scanner.env
-    networks:
-      container-link:
-        aliases:
-          - SCANNER
-    depends_on:
-      doc-mysql:
-        condition: service_healthy
-    profiles:
-      - extra
-
-  doc-monitor:
-    build:
-      context: ./monitor
-    image: doc-monitor-image
-    container_name: doc_monitor
-    hostname: monitor-server
-    env_file:
-      - ./monitor/env_monitor.env
-    networks:
-      container-link:
-        aliases:
-          - MONITOR
-    depends_on:
-      doc-mysql:
-        condition: service_healthy
-    profiles:
-      - extra
-
-
-networks:
-  container-link:
-    name: mysql_NW
+      - .env

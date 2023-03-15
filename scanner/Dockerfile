@@ -13,6 +13,7 @@ COPY \
   ssl_certificate_checker.py \
   controler.py \
   db.py \
+  post_message.py \
   command.py \
   command_util.py \
   __main__.py \
