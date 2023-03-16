@@ -7,7 +7,7 @@ from cryptography import x509
 
 def scan(url):
     try:
-        cert_data = ssl.get_server_certificate((url,443),ssl_version=ssl.PROTOCOL_SSLv23)
+        cert_data = ssl.get_server_certificate((url,443),ssl_version=ssl.PROTOCOL_SSLv23,timeout=10)
     except ssl.SSLError as e:
         print(f'Failed to resolve hostname [{url}]: {e}')
         return(None)

@@ -1,10 +1,11 @@
 requests
 cryptography
 pyopenssl
-mysql-connector-python
 dataset
 pysqlite3
 mysqlclient
+psycopg2
 click
 validators
 pytest
+slack_sdk
