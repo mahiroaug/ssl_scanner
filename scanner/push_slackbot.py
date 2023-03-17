@@ -17,10 +17,8 @@ def push_slackbot(now: date=date.today()):
     msg_u60 = make_message([row for row in rows if row["Remaining_Days"] is not None and row["Remaining_Days"] <= 60])
     msg_o61 = make_message([row for row in rows if row["Remaining_Days"] is not None and 60 < row["Remaining_Days"]])
     
-    header = "定期スキャン結果 ({})".format(now)
-    post_message(header)
-    post_message(msg_u60)
-    post_message(msg_o61)
+    post_message("60日以内にタイムリミットな人たちでーす({})\n".format(now) + msg_u60)
+    post_message("61日以上余裕ある人たち({})\n".format(now) + msg_o61)
 
 
 def make_message(source_list: list) -> str:
@@ -44,7 +42,7 @@ def post_message(msg: str):
         blocks_list = [{"type": "section", "text": {"type": "mrkdwn", "text": msg}}]
         response = SLACK_CLIENT.chat_postMessage(channel=SLACK_CHANNEL,blocks=blocks_list,as_user=True)
         print("slackResponse: ", response)
-    except SlackApiError as e:
+    except Exception as e:
         print("Error posting message: {}".format(e))
 
         
