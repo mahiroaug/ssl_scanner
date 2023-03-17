@@ -6,6 +6,7 @@ scanner/env_scanner.env
 *.sqlite
 *.sqlite-shm
 *.sqlite-wal
+domainlist.txt
 
 # ------------
 # Created by https://www.toptal.com/developers/gitignore/api/vim,visualstudiocode,python,macos,windows
