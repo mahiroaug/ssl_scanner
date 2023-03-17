@@ -7,3 +7,5 @@ mysqlclient
 psycopg2
 click
 validators
+pytest
+slack_sdk

@@ -13,6 +13,7 @@ COPY \
   ssl_certificate_checker.py \
   controler.py \
   db.py \
+  push_slackbot.py \
   command.py \
   command_util.py \
   __main__.py \
@@ -26,4 +27,4 @@ WORKDIR /app
 
 # Run the Python script
 #ENTRYPOINT ["python", "controler.py", "3", "1"]
-ENTRYPOINT ["python"]
+ENTRYPOINT ["python","."]
