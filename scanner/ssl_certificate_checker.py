@@ -1,13 +1,14 @@
 from datetime import datetime
+### import pyopenssl
 import ssl
 import OpenSSL
 import sys
-from cryptography import x509
+### from cryptography import x509
 ### from cryptography.hazmat.backends import default_backend
 
 def scan(url):
     try:
-        cert_data = ssl.get_server_certificate((url,443),ssl_version=ssl.PROTOCOL_SSLv23,timeout=10)
+        cert_data = ssl.get_server_certificate((url,443),ssl_version=ssl.PROTOCOL_SSLv23,)
     except ssl.SSLError as e:
         print(f'Failed to resolve hostname [{url}]: {e}')
         return(None)

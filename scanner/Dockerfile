@@ -27,4 +27,4 @@ WORKDIR /app
 
 # Run the Python script
 #ENTRYPOINT ["python", "controler.py", "3", "1"]
-ENTRYPOINT ["python"]
+ENTRYPOINT ["python","."]

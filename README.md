@@ -4,27 +4,17 @@ Analyzing SSL certificates for a website.
 # How To Use
 
 ## Create envifonment file
- - `mysql/env_mysql.env`
-  ```
-  MYSQL_ROOT_PASSWORD=
+ - `./.env`
+  ```sh
   TZ=Tokyo/Asia
-  ```
- - `monitor/env_monitor.env`
-  ```
-  MYSQL_ROOT_PASSWORD=
-  TZ=Tokyo/Asia
-  SLACK_BOT_TOKEN=
-  SLACK_CHANNEL_ID=
-  ```
- - `scanner/env_scanner.env`
-  ```
-  MYSQL_ROOT_PASSWORD=
-  TZ=Tokyo/Asia
+  DATABASE=sqlite:///data/db.sqlite
+  SLACK_BOT_TOKEN=<YOUR_SLACK_BOT_TOKEN>
+  SLACK_CHANNEL_ID=<YOUR_SLACK_CHANNEL_ID>
   ```
 
 ## Make CSV file (a list of FQDNs to be surveyed)
- - `mysql/FQDN.csv`
-  ```
+ - `db/domainlist.txt`
+  ```sh
   example1.com
   example2.com
   example3.com
@@ -36,30 +26,59 @@ Analyzing SSL certificates for a website.
 `docker compose config`
 
 ### build
-`docker compose --profile extra build --no-cache`
+`docker compose build --no-cache`
 
-### run (deploy DB server)
-`docker compose up -d`
+### run (init DB)
+`docker compose run --rm doc-scanner init`
 
 
-### run (scanner by cli or cronjob)
-`docker compose run doc-scanner controler.py <nodes> <node_id>`
+### run (loading domainlist)
+`ocker compose run --rm doc-scanner load data/domainlist.txt`
 
-- `nodes` is a line of parallels.
-- `node_id` is each node.
+### run (list all)
 
-example:
-- `docker compose run doc-scanner controler.py 4 1`
-- `docker compose run doc-scanner controler.py 4 2`
-- `docker compose run doc-scanner controler.py 4 3`
-- `docker compose run doc-scanner controler.py 4 4`
+`docker compose run --rm doc-scanner list`
 
-in parallel:
+### run (scan)
 
-- `seq 1 4 | parallel docker compose run doc-scanner controler.py 4 {}`
+`docker compose run --rm doc-scanner scan <domain>`
 
-### post message in slack
-`docker compose run doc-monitor python monitor.py`
+```sh
+ssl_scanner $ docker compose run --rm doc-scanner scan mineo.jp
+Subject:   *.mineo.jp
+notBefore: 2022-07-20 07:35:55  ( 20220720073555Z )
+notAfter:  2023-08-21 07:35:54  ( 20230821073554Z )
+Issuer:    AlphaSSL CA - SHA256 - G2
+Algorithm: sha256WithRSAEncryption
+Checkdate: 2023-03-17 02:20:45
+35: mineo.jp    expire_on:2023-08-21Z (157 days), checked_at:2023-03-17T02:20:45Z
+```
+
+### run (bulkscan)
+
+`docker compose run --rm doc-scanner bulkscan --allocate <worker_id>/<workers>`
+
+- worker_id : a specific number of each worker
+- workers   : total of workers
+
+```sh
+# 10 parallels
+docker compose run --rm -d doc-scanner bulkscan --allocate 1/10
+docker compose run --rm -d doc-scanner bulkscan --allocate 2/10
+docker compose run --rm -d doc-scanner bulkscan --allocate 3/10
+docker compose run --rm -d doc-scanner bulkscan --allocate 4/10
+docker compose run --rm -d doc-scanner bulkscan --allocate 5/10
+docker compose run --rm -d doc-scanner bulkscan --allocate 6/10
+docker compose run --rm -d doc-scanner bulkscan --allocate 7/10
+docker compose run --rm -d doc-scanner bulkscan --allocate 8/10
+docker compose run --rm -d doc-scanner bulkscan --allocate 9/10
+docker compose run --rm -d doc-scanner bulkscan --allocate 10/10
+```
+
+### push slack
+
+`docker compose run --rm --entrypoint="python push_slackbot.py" doc-scanner`
+
 
 ### stop
 `docker compose down --rmi all --volumes --remove-orphans`
