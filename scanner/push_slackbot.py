@@ -10,9 +10,9 @@ SLACK_CHANNEL = os.environ["SLACK_CHANNEL_ID"]
 def push_slackbot(now: date=date.today()):
     table = get_table()
     order_by_keys = {'id': ['ID'],
-                     'expire': ['Valid_To'],
-                     'scan': ['Last_Check'],
-                     }
+                    'expire': ['Valid_To'],
+                    'scan': ['Last_Check'],
+                    }
     rows = [convert_to_output(row,now) for row in table.find(order_by=order_by_keys['expire'])]
     
     
@@ -86,13 +86,24 @@ def make_message_null(source_list: list) -> str:
 
 
 def post_message(msg: str):
-    print(msg)
-    try:
-        blocks_list = [{"type": "section", "text": {"type": "mrkdwn", "text": msg}}]
-        response = SLACK_CLIENT.chat_postMessage(channel=SLACK_CHANNEL,blocks=blocks_list,as_user=True)
-        print("slackResponse: ", response)
-    except Exception as e:
-        print("Error posting message: {}".format(e))
+    chunk_size=2900
+    start=0
+    while start < len(msg):        
+        if (start + chunk_size) < len(msg):
+            end = msg.rfind("\n", start, start+ chunk_size)
+            if end > start:
+                chunk_size = end - start + 1
+        chunk = msg[start:start+chunk_size]
+        print("len=" + str(len(msg)) + ", start=" + str(start) + ", chunk_size=" + str(chunk_size))
+        print(chunk)
+        start = start + chunk_size
+        
+        try:
+            blocks_list = [{"type": "section", "text": {"type": "mrkdwn", "text": chunk}}]
+            response = SLACK_CLIENT.chat_postMessage(channel=SLACK_CHANNEL,blocks=blocks_list,as_user=True)
+            print("slackResponse: ", response)
+        except Exception as e:
+            print("Error posting message: {}".format(e))
 
 
 if __name__ == '__main__':
