@@ -42,6 +42,10 @@ def scan(url):
     sig_algo = x509.get_signature_algorithm().decode()
     print('Algorithm:', sig_algo)
 
+    # CertSerial
+    cert_serial = '{0:x}'.format(int(x509.get_serial_number()))
+    print('Serial:', cert_serial)
+
     # Other information
     # components = x509.get_subject().get_components()
     # for component in components:
@@ -51,7 +55,7 @@ def scan(url):
     checkdate = now.replace(microsecond=0)
     print('Checkdate:', checkdate)
 
-    return (subject, issuer, sig_algo, start_date, expiry_date, checkdate)
+    return (subject, issuer, sig_algo, start_date, expiry_date, checkdate, cert_serial)
 
 
 if __name__ == "__main__":

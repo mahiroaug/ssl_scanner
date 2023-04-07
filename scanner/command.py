@@ -251,11 +251,16 @@ def convert_to_output(row: dict, now: date) -> dict:
         'Valid_To',
         'Last_Check'
     ]
+    extra_keys = [
+        'CertSerial',
+    ]
     if row['Valid_To'] is None:
         remain = None
     else:
         remain = (row['Valid_To'] - now).days
     data = {k: row[k] for k in keys}
+    for k in extra_keys:
+        data[k] = data.get(k)
     data['Remaining_Days'] = remain
     data['Remaining_Base'] = now
 

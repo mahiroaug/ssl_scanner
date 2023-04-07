@@ -48,7 +48,7 @@ def get_list(n, id):
     return (chunk)
 
 
-def update(domain, subject, issuer, sig_algo, start_date, expiry_date, checkdate):
+def update(domain, subject, issuer, sig_algo, start_date, expiry_date, checkdate, cert_serial):
     data = dict(
         Domain=domain,
         Subject=subject,
@@ -57,6 +57,7 @@ def update(domain, subject, issuer, sig_algo, start_date, expiry_date, checkdate
         Valid_From=start_date,
         Valid_To=expiry_date,
         Last_Check=checkdate,
+        CertSerial=cert_serial,
     )
     with db as tx:
         certificates = tx["Certificates"]
