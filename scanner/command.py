@@ -181,7 +181,7 @@ def load(input: io.TextIOWrapper, delete: bool, yes: bool):
     # Check Changes
     add_change = listed_domains - exists_domains
     del_change = exists_domains - listed_domains
-    
+
     if len(add_change) == 0 and len(del_change) == 0:
         output_message("There is nothing to be updated.")
         return 0

@@ -66,5 +66,3 @@ def test_show(cli: click.Group):
     assert len(output) == 1
     expect = "1: github.com\texpire_on:None (-- days), checked_at:None"
     assert result.stdout.strip() == expect
-
-
