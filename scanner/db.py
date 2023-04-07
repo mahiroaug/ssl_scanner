@@ -68,13 +68,33 @@ def create_certificates_table(drop_exists=False) -> dataset.Table:
     if db.has_table("Certificates") and drop_exists:
         db.get_table("Certificates").drop()
     table: dataset.Table = db.create_table("Certificates", primary_id="ID")
-    table.create_column("Domain", type=db.types.string(256), unique=True)
-    table.create_column("Subject", type=db.types.text)
-    table.create_column("Issuer", type=db.types.text)
-    table.create_column("SigAlgorithm", type=db.types.text)
-    table.create_column("Valid_From", type=db.types.date)
-    table.create_column("Valid_To", type=db.types.date)
-    table.create_column("Last_Check", type=db.types.datetime)
+    alter_certificates_table(table)
+    return table
+
+
+def alter_certificates_table(table: dataset.Table) -> dataset.Table:
+    """
+    Migrate the columns on 'Certificates' table.
+
+    Args:
+        table (dataset.Table):
+            An instance to communicate with the table.
+
+    Returns:
+        dataset.Table: An instance to communicate with the table.
+    """
+    columns = [
+        ("Domain", dict(type=db.types.string(256), unique=True)),
+        ("Subject", dict(type=db.types.text)),
+        ("Issuer", dict(type=db.types.text)),
+        ("SigAlgorithm", dict(type=db.types.text)),
+        ("Valid_From", dict(type=db.types.date)),
+        ("Valid_To", dict(type=db.types.date)),
+        ("Last_Check", dict(type=db.types.datetime)),
+    ]
+    for column in columns:
+        if not table.has_column(column[0]):
+            table.create_column(column[0], **(column[1]))
     return table
 
 
