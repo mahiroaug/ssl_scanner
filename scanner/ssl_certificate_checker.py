@@ -1,29 +1,26 @@
 from datetime import datetime
-### import pyopenssl
+# import pyopenssl
 import ssl
 import OpenSSL
 import sys
-### from cryptography import x509
-### from cryptography.hazmat.backends import default_backend
+# from cryptography import x509
+# from cryptography.hazmat.backends import default_backend
+
 
 def scan(url):
     try:
-        cert_data = ssl.get_server_certificate((url,443),ssl_version=ssl.PROTOCOL_SSLv23,timeout=10)
+        cert_data = ssl.get_server_certificate((url, 443), ssl_version=ssl.PROTOCOL_SSLv23, timeout=10)
     except ssl.SSLError as e:
         print(f'Failed to resolve hostname [{url}]: {e}')
-        return(None)
+        return (None)
     except Exception as e:
         print(f"Error Occurred [{url}]: {e}")
-        return(None)
-    except:
-        print(f"Exception [{url}]")
-        return(None)
-    
+        return (None)
 
     # Convert to human-readable form
     x509 = OpenSSL.crypto.load_certificate(OpenSSL.crypto.FILETYPE_PEM, cert_data)
 
-    #Subject
+    # Subject
     subject = x509.get_subject().commonName
     print('Subject:  ', subject)
 
@@ -46,26 +43,24 @@ def scan(url):
     print('Algorithm:', sig_algo)
 
     # Other information
-    ### components = x509.get_subject().get_components()
-    ### for component in components:
-    ###    print(component)
+    # components = x509.get_subject().get_components()
+    # for component in components:
+    # print(component)
 
     now = datetime.now()
     checkdate = now.replace(microsecond=0)
     print('Checkdate:', checkdate)
 
-    return(subject,issuer,sig_algo,start_date,expiry_date,checkdate)
+    return (subject, issuer, sig_algo, start_date, expiry_date, checkdate)
 
 
-
-
-if __name__=="__main__":
+if __name__ == "__main__":
     # Check Argument
     if len(sys.argv) != 2:
         print("not match argument")
         sys.exit()
 
     # URL of the website whose SSL certificate you want to check
-    ### print(sys.argv[1])
+    # print(sys.argv[1])
     url = sys.argv[1]
     scan(url)

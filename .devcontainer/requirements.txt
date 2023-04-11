@@ -9,3 +9,4 @@ click
 validators
 pytest
 slack_sdk
+autopep8
