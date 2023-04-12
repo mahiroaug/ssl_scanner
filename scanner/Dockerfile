@@ -21,6 +21,7 @@ COPY \
 
 # Add test codes
 COPY ./tests /app/tests
+COPY ./migration_tests /app/migration_tests
 
 # Set working directory
 WORKDIR /app
