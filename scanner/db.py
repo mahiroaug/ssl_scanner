@@ -67,7 +67,12 @@ def create_certificates_table(drop_exists=False) -> dataset.Table:
     """
     if db.has_table("Certificates") and drop_exists:
         db.get_table("Certificates").drop()
-    table: dataset.Table = db.create_table("Certificates", primary_id="ID")
+    if db.has_table("Certificates"):
+        table: dataset.Table = db.get_table("Certificates")
+        if not table.has_column("ID"):
+            raise Exception("Unexpected formatted table 'Certificates' in the database.")
+    else:
+        table: dataset.Table = db.create_table("Certificates", primary_id="ID")
     alter_certificates_table(table)
     return table
 
