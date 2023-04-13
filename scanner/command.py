@@ -1,3 +1,4 @@
+from logging import warning
 import validators
 import json
 import dataset
@@ -210,7 +211,10 @@ def get_table() -> dataset.Table:
     from db import db
     if not db.has_table('Certificates'):
         raise CommandException.TableNotFound()
-    return db.get_table("Certificates")
+    table: dataset.Table = db.get_table("Certificates")
+    if not table.has_column('CertSerial'):
+        warning("The table format is not latest versions. Please reform with 'init' command.")
+    return table
 
 
 def assert_domain_format(domain: str):
