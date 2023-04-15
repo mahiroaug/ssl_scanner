@@ -77,6 +77,7 @@ def test_update_s1(table: dataset.Table):
         None,
         None,
         None,
+        None,
     ]
     assert [v for v in before.values()] == default_data
     data = [
@@ -88,6 +89,7 @@ def test_update_s1(table: dataset.Table):
         date.fromisoformat("2023-01-02"),
         datetime.fromisoformat("2023-01-03 00:00:00"),
         "0123456789",
+        "192.168.1.1:443",
     ]
     inserted = update(*data)
     after = table.find_one(Domain="github.com")

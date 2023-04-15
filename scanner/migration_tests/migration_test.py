@@ -69,6 +69,7 @@ def table(table_v1: dataset.Table):
         Valid_To=date.fromisoformat("2023-01-02"),
         Last_Check=datetime.fromisoformat("2023-01-03 00:00:00"),
         CertSerial=None,
+        PeerAddress=None
     )
     migrated_data = table.find_one(Domain="github.com")
     assert all([v == migrated_data[k] for k, v in check_data.items()])
@@ -93,6 +94,7 @@ def test_update_s1(table: dataset.Table):
         Valid_To=date.fromisoformat("2023-01-02"),
         Last_Check=datetime.fromisoformat("2023-01-03 00:00:00"),
         CertSerial="012345",
+        PeerAddress="192.168.1.1:443"
     )
     inserted = update(*data.values())
     after = table.find_one(Domain="slack.com")
