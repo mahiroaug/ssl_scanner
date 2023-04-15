@@ -97,6 +97,7 @@ def alter_certificates_table(table: dataset.Table) -> dataset.Table:
         ("Valid_To", dict(type=db.types.date)),
         ("Last_Check", dict(type=db.types.datetime)),
         ("CertSerial", dict(type=db.types.text)),
+        ("PeerAddress", dict(type=db.types.text)),
     ]
     for column in columns:
         if not table.has_column(column[0]):

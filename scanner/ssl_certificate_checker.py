@@ -1,15 +1,13 @@
 from datetime import datetime
-# import pyopenssl
 import ssl
 import OpenSSL
 import sys
-# from cryptography import x509
-# from cryptography.hazmat.backends import default_backend
+import ssl_patch
 
 
 def scan(url):
     try:
-        cert_data = ssl.get_server_certificate((url, 443), ssl_version=ssl.PROTOCOL_SSLv23, timeout=10)
+        cert_data, peername = ssl_patch.get_server_certificate_ex((url, 443), ssl_version=ssl.PROTOCOL_SSLv23, timeout=10)
     except ssl.SSLError as e:
         print(f'Failed to resolve hostname [{url}]: {e}')
         return (None)
@@ -55,7 +53,10 @@ def scan(url):
     checkdate = now.replace(microsecond=0)
     print('Checkdate:', checkdate)
 
-    return (subject, issuer, sig_algo, start_date, expiry_date, checkdate, cert_serial)
+    peer_address = f"{peername[0]}:{peername[1]}"
+    print('PeerAddress:', peer_address)
+
+    return (subject, issuer, sig_algo, start_date, expiry_date, checkdate, cert_serial, peer_address)
 
 
 if __name__ == "__main__":

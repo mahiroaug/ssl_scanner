@@ -212,7 +212,7 @@ def get_table() -> dataset.Table:
     if not db.has_table('Certificates'):
         raise CommandException.TableNotFound()
     table: dataset.Table = db.get_table("Certificates")
-    if not table.has_column('CertSerial'):
+    if not all([table.has_column(c) for c in ['CertSerial', 'PeerAddress']]):
         warning("The table format is not latest versions. Please reform with 'init' command.")
     return table
 
@@ -257,6 +257,7 @@ def convert_to_output(row: dict, now: date) -> dict:
     ]
     extra_keys = [
         'CertSerial',
+        'PeerAddress',
     ]
     if row['Valid_To'] is None:
         remain = None
