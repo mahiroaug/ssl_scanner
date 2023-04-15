@@ -16,6 +16,7 @@ COPY \
   push_slackbot.py \
   command.py \
   command_util.py \
+  ssl_patch.py \
   __main__.py \
   /app/
 
