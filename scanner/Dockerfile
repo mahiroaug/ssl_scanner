@@ -16,11 +16,13 @@ COPY \
   push_slackbot.py \
   command.py \
   command_util.py \
+  ssl_patch.py \
   __main__.py \
   /app/
 
 # Add test codes
 COPY ./tests /app/tests
+COPY ./migration_tests /app/migration_tests
 
 # Set working directory
 WORKDIR /app

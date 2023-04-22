@@ -53,6 +53,7 @@ jobs:
       - name: Run pytest in docker
         run: |
           docker run --rm --entrypoint=python ${{ steps.meta.outputs.tags }} -m pytest
+          docker run --rm --entrypoint=python ${{ steps.meta.outputs.tags }} -m pytest migration_tests
 
       - name: Build and push Docker image (Scanner)
         id: build-and-push

@@ -10,13 +10,13 @@ os.environ["SQLALCHEMY_SILENCE_UBER_WARNING"] = "1"
 import dataset  # noqa: E402
 
 
-@pytest.fixture()
+@pytest.fixture(scope="module")
 def db():
     from db import db
     return db
 
 
-@pytest.fixture()
+@pytest.fixture(scope="module")
 def table(db: dataset.Database):
     from db import create_certificates_table, populate_certificates_table
     table = create_certificates_table(drop_exists=True)
@@ -29,7 +29,7 @@ def table(db: dataset.Database):
     return table
 
 
-@pytest.fixture(name='cli')
+@pytest.fixture(name='cli', scope="module")
 def cli(db: dataset.Database) -> click.Group:
     from command import cli as cli_application
     return cli_application

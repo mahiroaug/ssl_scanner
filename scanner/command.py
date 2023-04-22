@@ -1,3 +1,4 @@
+from logging import warning
 import validators
 import json
 import dataset
@@ -210,7 +211,10 @@ def get_table() -> dataset.Table:
     from db import db
     if not db.has_table('Certificates'):
         raise CommandException.TableNotFound()
-    return db.get_table("Certificates")
+    table: dataset.Table = db.get_table("Certificates")
+    if not all([table.has_column(c) for c in ['CertSerial', 'PeerAddress']]):
+        warning("The table format is not latest versions. Please reform with 'init' command.")
+    return table
 
 
 def assert_domain_format(domain: str):
@@ -251,11 +255,17 @@ def convert_to_output(row: dict, now: date) -> dict:
         'Valid_To',
         'Last_Check'
     ]
+    extra_keys = [
+        'CertSerial',
+        'PeerAddress',
+    ]
     if row['Valid_To'] is None:
         remain = None
     else:
         remain = (row['Valid_To'] - now).days
     data = {k: row[k] for k in keys}
+    for k in extra_keys:
+        data[k] = data.get(k)
     data['Remaining_Days'] = remain
     data['Remaining_Base'] = now
 

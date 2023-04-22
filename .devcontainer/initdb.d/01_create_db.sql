@@ -10,6 +10,8 @@ CREATE TABLE Certificates (
     Valid_From DATE,
     Valid_To DATE,
     Last_Check DATETIME,
+    CertSerial TEXT,
+    PeerAddress TEXT,
     PRIMARY KEY (ID),
     UNIQUE (Domain)
 );
